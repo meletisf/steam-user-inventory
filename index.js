@@ -23,18 +23,23 @@ var SteamInventories = {
 		else {
 			throw new TypeError('User identifier hasn\'t been set')
 		}
-
+		
 		unirest.get(url)
 			.headers({'Accept': 'application/json'})
 			.end(function(resp) {
 
 				if(resp.code == 429) {
 					throw new Error('Too many requests');
-					return;
 				}
 
-				var desc = JSON.parse(res.body).rgDescriptions;
-				var items = JSON.parse(res.body).rgInventory;
+				var response = [];
+
+				if(resp.body.success == false) {
+					throw new Error(resp.body.Error);
+				}
+
+				var desc = resp.body.rgDescriptions;
+				var items = resp.body.rgInventory;
 
 				Object.keys(items).forEach(key => {
 					let temp = items[key];
@@ -82,6 +87,8 @@ var SteamInventories = {
 
 					response.push(data);
 				});
+
+				callback(response);
 
 			});
 
