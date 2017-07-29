@@ -1,42 +1,27 @@
 {
-  "name": "steam-user-inventory",
-  "version": "4.1.0",
-  "description": "Get the items in user steam inventory",
-  "license": "MIT",
-  "repository": "steam-items/steam-user-inventory",
-  "author": {
-    "name": "Daniel Husar",
-    "email": "dano.husar@gmail.com",
-    "url": "github.com/danielhusar"
-  },
-  "engines": {
-    "node": ">=4"
-  },
-  "scripts": {
-    "fixture": "node fixture.js",
-    "test": "mocha"
-  },
-  "files": [
-    "index.js"
-  ],
+  "name": "steam-inventories",
+  "version": "0.1.0",
+  "description": "Read the items from a Steam inventory",
+  "main": "index.js",
   "keywords": [
     "steam",
-    "user",
-    "inventory"
+    "valve",
+    "inventory",
+    "csgo",
+    "dota",
+    "tf2",
+    "items"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meletisf/steam-user-inventory.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Meletios Flevarakis <m.flevarakis@acg.edu> (https://meletisf.me)",
+  "license": "MIT",
   "dependencies": {
-    "got": "^4.2.0"
-  },
-  "devDependencies": {
-    "lodash": "^3.10.1",
-    "mocha": "^2.2.5",
-    "proxyquire": "^1.7.3",
-    "xo": "^0.9.0"
-  },
-  "xo": {
-    "envs": [
-      "node",
-      "mocha"
-    ]
+    "unirest": "^0.5.1"
   }
 }

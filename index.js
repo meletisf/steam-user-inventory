@@ -1,86 +1,92 @@
-'use strict';
+var unirest = require('unirest');
 
-const got = require('got');
-let URL;
 
-module.exports = function (user, game, gotOptions) {
-	if (!user) {
-		throw new TypeError('Please provide a user');
-	}
+var SteamInventories = {
 
-	game = game || '730/2/';
+	get: function(options, callback) {
 
-	if (isNaN(Number(user))) {
-		URL = `http://steamcommunity.com/id/${user}/inventory/json/${game}`;
-	} else {
-		URL = `http://steamcommunity.com/profiles/${user}/inventory/json/${game}`;
-	}
-
-	let response = [];
-
-	return got(URL, gotOptions).then(res => {
-		let items;
-		let desc;
-
-		try {
-			desc = JSON.parse(res.body).rgDescriptions;
-			items = JSON.parse(res.body).rgInventory;
-		} catch (e) {
-			items = [];
-			desc = {};
+		if(!options.appID) {
+			throw new TypeError('appID is not set');
 		}
 
-		if (!items) {
-			return response;
+		if(!options.contextID) {
+			options.contextID = 2;
 		}
 
-		Object.keys(items).forEach(key => {
-			let temp = items[key];
-			let item = desc[`${temp.classid}_${temp.instanceid}`];
+		var url;
+		if(options.steamID) {
+			url = `http://steamcommunity.com/profiles/${options.steamID}/inventory/json/${options.appID}/${options.contextID}`;
+		}
+		else if(options.steamUser) {
+			url = `http://steamcommunity.com/id/${options.steamUser}/inventory/json/${options.appID}/${options.contextID}`;
+		}
+		else {
+			throw new TypeError('User identifier hasn\'t been set')
+		}
 
-			if (!item) {
-				return response.push({error: true});
-			}
+		unirest.get(url)
+			.headers({'Accept': 'application/json'})
+			.end(function(resp) {
 
-			let data = {
-				id: temp.id,
-				amount: temp.amount,
-				pos: temp.pos,
-				name: item.name,
-				appid: item.appid,
-				classid: item.classid,
-				instanceid: item.instanceid,
-				tradable: item.tradable,
-				marketable: item.marketable,
-				marketTradableRestriction: item.market_tradable_restriction,
-				link: item.actions ? item.actions[0].link : null,
-				image: `http://steamcommunity-a.akamaihd.net/economy/image/${item.icon_url_large || item.icon_url}`,
-				category: null,
-				type: null,
-				exterior: null,
-				quality: null,
-				raw: item,
-			};
+				if(resp.code == 429) {
+					throw new Error('Too many requests');
+					return;
+				}
 
-			// To match http://steamcommunity.com/market/ filters names
-			item.tags.forEach(tag => {
-				if (tag.category === 'Type') {
-					data.type = tag.name;
-				}
-				if (tag.category === 'Weapon') {
-					data.weapon = tag.name;
-				}
-				if (tag.category === 'Quality') {
-					data.category = tag.name;
-				}
-				if (tag.category === 'Exterior') {
-					data.exterior = tag.name;
-				}
+				var desc = JSON.parse(res.body).rgDescriptions;
+				var items = JSON.parse(res.body).rgInventory;
+
+				Object.keys(items).forEach(key => {
+					let temp = items[key];
+					let item = desc[`${temp.classid}_${temp.instanceid}`];
+
+					if (!item) {
+						return response.push({error: true});
+					}
+
+					let data = {
+						id: temp.id,
+						amount: temp.amount,
+						pos: temp.pos,
+						name: item.name,
+						appid: item.appid,
+						classid: item.classid,
+						instanceid: item.instanceid,
+						tradable: item.tradable,
+						marketable: item.marketable,
+						marketTradableRestriction: item.market_tradable_restriction,
+						link: item.actions ? item.actions[0].link : null,
+						image: `http://steamcommunity-a.akamaihd.net/economy/image/${item.icon_url_large || item.icon_url}`,
+						category: null,
+						type: null,
+						exterior: null,
+						quality: null,
+						raw: item,
+					};
+
+					// To match http://steamcommunity.com/market/ filters names
+					item.tags.forEach(tag => {
+						if (tag.category === 'Type') {
+							data.type = tag.name;
+						}
+						if (tag.category === 'Weapon') {
+							data.weapon = tag.name;
+						}
+						if (tag.category === 'Quality') {
+							data.category = tag.name;
+						}
+						if (tag.category === 'Exterior') {
+							data.exterior = tag.name;
+						}
+					});
+
+					response.push(data);
+				});
+
 			});
 
-			response.push(data);
-		});
+	}
 
-		return response;
-	});
-};
+}
+
+module.exports = SteamInventories;
