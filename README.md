@@ -2,6 +2,13 @@
 
 Steam Inventories is a forked version of `steam-user-inventory` the uses `unirest` and has a bit better configuration.
 
+[![npm version](https://badge.fury.io/js/steam-inventories.svg)](https://badge.fury.io/js/steam-inventories)
+[![npm](https://img.shields.io/npm/dm/steam-inventories.svg)](https://www.npmjs.com/package/steam-inventories)
+[![Maintenance](https://img.shields.io/maintenance/yes/2017.svg)](https://www.npmjs.com/package/steam-inventories)
+
+[![NPM](https://nodei.co/npm/steam-inventories.png)](https://nodei.co/npm/steam-inventories/)
+
+
 **WARNING:** This module uses the steam community inventory method which means that your ip will get an `HTTP 429` after a certain number of calls. Be advised and cache the hell out of it. 
 
 
