@@ -2,6 +2,8 @@
 
 Steam Inventories is a forked version of `steam-user-inventory` the uses `unirest` and has a bit better configuration.
 
+**WARNING:** This module uses the steam community inventory method which means that your ip will get an `HTTP 429` after a certain number of calls. Be advised and cache the hell out of it. 
+
 
 ### Install
 ```
