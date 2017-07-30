@@ -26,7 +26,10 @@ var SteamInventories = require('steam-inventories');
 SteamInventories.get({
 	appID: 730,
 	steamID: '76561198040824008'
-}, function(items) {
+}, function(err, items) {
+	if(err) {
+		throw err;
+	}
 	console.log(JSON.stringify(items))
 });
 ```

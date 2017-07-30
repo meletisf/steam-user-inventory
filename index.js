@@ -25,17 +25,19 @@ var SteamInventories = {
 		}
 		
 		unirest.get(url)
-			.headers({'Accept': 'application/json'})
+			.headers({
+				'Accept': 'application/json'
+			})
 			.end(function(resp) {
 
 				if(resp.code == 429) {
-					throw new Error('Too many requests');
+					callback(new Error('Too many requests'));
 				}
 
 				var response = [];
 
 				if(resp.body.success == false) {
-					throw new Error(resp.body.Error);
+					callback(new Error(resp.body.Error));
 				}
 
 				var desc = resp.body.rgDescriptions;
@@ -88,7 +90,7 @@ var SteamInventories = {
 					response.push(data);
 				});
 
-				callback(response);
+				callback(null, response);
 
 			});
 

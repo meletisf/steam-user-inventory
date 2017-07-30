@@ -1,6 +1,6 @@
 {
   "name": "steam-inventories",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Read the items from a Steam inventory",
   "main": "index.js",
   "keywords": [
